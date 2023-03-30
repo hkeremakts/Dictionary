@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.DependencyResolvers.Autofac;
 using Core.Utilities.Results;
 using Entities;
 using System;
@@ -19,9 +20,9 @@ namespace DictionaryForm
         IWordService _wordService;
         Word _word;
         public RichTextBox[] _definitionTextBoxArray = new RichTextBox[5];
-        public UpdateForm(IWordService wordService,Word word)
+        public UpdateForm(Word word)
         {
-            _wordService = wordService;
+            _wordService = InstanceFactory.GetInstance<IWordService>();
             InitializeComponent();
             _word = word;
             nameTextBox.Text=word.Name;

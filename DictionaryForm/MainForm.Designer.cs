@@ -1,4 +1,6 @@
-﻿namespace DictionaryForm
+﻿using Autofac;
+
+namespace DictionaryForm
 {
     partial class MainForm
     {
@@ -6,7 +8,7 @@
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
-
+        ContainerBuilder builder = new ContainerBuilder();
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
@@ -107,6 +109,11 @@
             this.wordScroller.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.wordScroller.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.wordScroller.Location = new System.Drawing.Point(113, 166);
+            this.wordScroller.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.wordScroller.Name = "wordScroller";
             this.wordScroller.Size = new System.Drawing.Size(40, 28);
             this.wordScroller.TabIndex = 9;

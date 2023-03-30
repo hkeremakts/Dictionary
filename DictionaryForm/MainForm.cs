@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
 using Business.Concrete;
 using Business.Constant;
+using Business.DependencyResolvers.Autofac;
 using Core.Utilities.Results;
 using DataAccess.Concrete.EntityFramework;
 using Entities;
@@ -21,23 +22,18 @@ namespace DictionaryForm
     {
         IWordService _wordService;
         string[] _definitions=new string[5];
-        public MainForm(IWordService wordService)
+        public MainForm()
         {
-            _wordService = wordService;
+            _wordService = InstanceFactory.GetInstance<IWordService>();
             InitializeComponent();
+            wordScroller.Maximum=_definitions.Length;
         }
 
         private void add_Click(object sender, EventArgs e)
         {
-            AddForm form = new AddForm(new WordManager(new EfWordDal()),searchTextBox.Text);
+            AddForm form = new AddForm(searchTextBox.Text);
             form.Show();
         }
-
-        private void hScrollBar1_Scroll(object sender, ScrollEventArgs e)
-        {
-
-        }
-
         private void search_Click(object sender, EventArgs e)
         {
             string name = searchTextBox.Text;
@@ -53,45 +49,25 @@ namespace DictionaryForm
             }
             definitionDalTextBox.Text = _definitions[(int)wordScroller.Value-1];
         }
-
         private void wordScroller_ValueChanged(object sender, EventArgs e)
         {
-                if (wordScroller.Value < 1)
-                    wordScroller.Value = 1;
-                else if (wordScroller.Value > _definitions.Length)
-                    wordScroller.Value = _definitions.Length - 1;
-                else if (_definitions[(int)wordScroller.Value-1] == null&&wordScroller.Value!=1)
-                    wordScroller.Value = wordScroller.Value - 1;
-                else if (wordScroller.Value == 1) { }                  
-                else
-                    definitionDalTextBox.Text = _definitions[(int)wordScroller.Value - 1];
+            bool flag = false;
+            foreach (var item in _definitions)
+            {
+                if (item!=null)
+                    flag = true;
+            }
+            if (!flag)
+                wordScroller.Value = 1;
+            else if (_definitions[(int)wordScroller.Value-1].Length<1)
+                wordScroller.Value--;
+            else
+                definitionDalTextBox.Text = _definitions[(int)wordScroller.Value - 1];
         }
-        //public void ChangeDefinitionDalLabelTexts()
-        //{
-        //    definitionDalTextBox.Text = _definitions[(int)wordScroller.Value];
-
-
-        //    //string name = searchTextBox.Text;
-        //    //var result = _wordService.GetWordByName(name);
-        //    //string[] definitions = new string[5];
-        //    //if (result.Success && definitions.Length >= i)
-        //    //{
-        //    //    definitionDalTextBox.Text = definitions[i - 1];
-        //    //}
-        //    //else if (!result.Success)
-        //    //    MessageBox.Show(result.Message);
-        //    //else
-        //    //    i--;
-        //}
-
-        private void definitionDalLabel_TextChanged(object sender, EventArgs e)
-        {
-        }
-
         private void updateButton_Click(object sender, EventArgs e)
         {
             var word = _wordService.GetWordByName(searchTextBox.Text);
-            UpdateForm form = new UpdateForm(new WordManager(new EfWordDal()), word.Data);
+            UpdateForm form = new UpdateForm(word.Data);
             form.Show();
         }
     }

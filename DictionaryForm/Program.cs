@@ -1,4 +1,5 @@
 using Business.Concrete;
+using Business.DependencyResolvers.Autofac;
 using DataAccess.Concrete.EntityFramework;
 
 namespace DictionaryForm
@@ -14,7 +15,7 @@ namespace DictionaryForm
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            Application.Run(new MainForm(new WordManager(new EfWordDal())));
+            Application.Run(new MainForm());
         }
     }
 }
