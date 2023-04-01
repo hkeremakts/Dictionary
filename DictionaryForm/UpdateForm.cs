@@ -45,7 +45,8 @@ namespace DictionaryForm
         {
             Word updatedWord = new Word()
             {
-                Name = nameTextBox.Text,
+                Id=_word.Id,
+                Name = _word.Name,
                 Translation = translationTextBox.Text
             };
             var wordInfo= updatedWord.GetType().GetProperties().Where(x => x.Name.Contains("Definition")).ToArray();
@@ -53,7 +54,7 @@ namespace DictionaryForm
             {
                 wordInfo[i].SetValue(updatedWord, _definitionTextBoxArray[i].Text);
             }
-            var result = _wordService.Update(_word,updatedWord);
+            var result = _wordService.Update(updatedWord);
             if (!result.Success)
                 MessageBox.Show(result.Message);
             else

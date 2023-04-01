@@ -14,6 +14,6 @@ namespace Business.Abstract
         IDataResult<Word> GetWordByName(string name);
         IResult Add(Word word);
         IResult Delete(Word word);
-        IResult Update(Word word,Word updatedWord);
+        IResult Update(Word word);
     }
 }

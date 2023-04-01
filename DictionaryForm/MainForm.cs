@@ -21,12 +21,11 @@ namespace DictionaryForm
     public partial class MainForm : Form
     {
         IWordService _wordService;
-        string[] _definitions=new string[5];
+        List<string> _definitions=new List<string>();
         public MainForm()
         {
             _wordService = InstanceFactory.GetInstance<IWordService>();
             InitializeComponent();
-            wordScroller.Maximum=_definitions.Length;
         }
 
         private void add_Click(object sender, EventArgs e)
@@ -43,32 +42,41 @@ namespace DictionaryForm
             var wordInfo = result.Data.GetType().GetProperties().Where(x => x.Name.Contains("Definition")).ToArray();
             for (int i = 0; i < wordInfo.Length; i++)
             {
-                if (wordInfo[i].GetValue(result.Data) == null)
+                var data = wordInfo[i].GetValue(result.Data);
+                if (data.ToString().Length==0)
                     break;
-                _definitions[i] = wordInfo[i].GetValue(result.Data).ToString();
+                _definitions.Add(data.ToString());
             }
+            wordScroller.Maximum = _definitions.Count();
             definitionDalTextBox.Text = _definitions[(int)wordScroller.Value-1];
         }
         private void wordScroller_ValueChanged(object sender, EventArgs e)
         {
-            bool flag = false;
-            foreach (var item in _definitions)
-            {
-                if (item!=null)
-                    flag = true;
-            }
-            if (!flag)
-                wordScroller.Value = 1;
-            else if (_definitions[(int)wordScroller.Value-1].Length<1)
-                wordScroller.Value--;
-            else
-                definitionDalTextBox.Text = _definitions[(int)wordScroller.Value - 1];
+            definitionDalTextBox.Text= _definitions[(int)wordScroller.Value - 1];
         }
         private void updateButton_Click(object sender, EventArgs e)
         {
-            var word = _wordService.GetWordByName(searchTextBox.Text);
-            UpdateForm form = new UpdateForm(word.Data);
-            form.Show();
+            var result = _wordService.GetWordByName(searchTextBox.Text);
+            if (!result.Success)
+                MessageBox.Show(result.Message);
+            else
+            {
+                UpdateForm form = new UpdateForm(result.Data);
+                form.Show();
+            }
+        }
+
+        private void deleteButton_Click(object sender, EventArgs e)
+        {
+            var result = _wordService.GetWordByName(searchTextBox.Text);
+            if (!result.Success)
+                MessageBox.Show(result.Message);
+            else
+            {
+                var deleteResult=_wordService.Delete(result.Data);
+                MessageBox.Show(deleteResult.Message)
+            }
+                
         }
     }
 }

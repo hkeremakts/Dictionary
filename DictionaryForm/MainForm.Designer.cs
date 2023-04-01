@@ -41,6 +41,7 @@ namespace DictionaryForm
             this.nameDalTextBox = new System.Windows.Forms.RichTextBox();
             this.translationDalTextBox = new System.Windows.Forms.RichTextBox();
             this.updateButton = new System.Windows.Forms.Button();
+            this.deleteButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.wordScroller)).BeginInit();
             this.SuspendLayout();
             // 
@@ -109,6 +110,11 @@ namespace DictionaryForm
             this.wordScroller.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.wordScroller.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.wordScroller.Location = new System.Drawing.Point(113, 166);
+            this.wordScroller.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.wordScroller.Minimum = new decimal(new int[] {
             1,
             0,
@@ -131,7 +137,7 @@ namespace DictionaryForm
             this.definitionDalTextBox.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.definitionDalTextBox.Location = new System.Drawing.Point(159, 136);
             this.definitionDalTextBox.Name = "definitionDalTextBox";
-            this.definitionDalTextBox.Size = new System.Drawing.Size(357, 101);
+            this.definitionDalTextBox.Size = new System.Drawing.Size(407, 101);
             this.definitionDalTextBox.TabIndex = 10;
             this.definitionDalTextBox.Text = "Default";
             // 
@@ -142,7 +148,7 @@ namespace DictionaryForm
             this.nameDalTextBox.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.nameDalTextBox.Location = new System.Drawing.Point(159, 88);
             this.nameDalTextBox.Name = "nameDalTextBox";
-            this.nameDalTextBox.Size = new System.Drawing.Size(357, 35);
+            this.nameDalTextBox.Size = new System.Drawing.Size(407, 35);
             this.nameDalTextBox.TabIndex = 11;
             this.nameDalTextBox.Text = "Default";
             // 
@@ -153,7 +159,7 @@ namespace DictionaryForm
             this.translationDalTextBox.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.translationDalTextBox.Location = new System.Drawing.Point(159, 243);
             this.translationDalTextBox.Name = "translationDalTextBox";
-            this.translationDalTextBox.Size = new System.Drawing.Size(357, 35);
+            this.translationDalTextBox.Size = new System.Drawing.Size(407, 35);
             this.translationDalTextBox.TabIndex = 12;
             this.translationDalTextBox.Text = "Default";
             // 
@@ -168,11 +174,23 @@ namespace DictionaryForm
             this.updateButton.UseVisualStyleBackColor = true;
             this.updateButton.Click += new System.EventHandler(this.updateButton_Click);
             // 
+            // deleteButton
+            // 
+            this.deleteButton.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.deleteButton.Location = new System.Drawing.Point(472, 31);
+            this.deleteButton.Name = "deleteButton";
+            this.deleteButton.Size = new System.Drawing.Size(94, 34);
+            this.deleteButton.TabIndex = 14;
+            this.deleteButton.Text = "Delete";
+            this.deleteButton.UseVisualStyleBackColor = true;
+            this.deleteButton.Click += new System.EventHandler(this.deleteButton_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(528, 314);
+            this.ClientSize = new System.Drawing.Size(588, 314);
+            this.Controls.Add(this.deleteButton);
             this.Controls.Add(this.updateButton);
             this.Controls.Add(this.translationDalTextBox);
             this.Controls.Add(this.nameDalTextBox);
@@ -205,5 +223,6 @@ namespace DictionaryForm
         private RichTextBox nameDalTextBox;
         private RichTextBox translationDalTextBox;
         private Button updateButton;
+        private Button deleteButton;
     }
 }

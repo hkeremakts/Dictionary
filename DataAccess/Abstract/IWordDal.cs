@@ -10,6 +10,5 @@ namespace DataAccess.Abstract
 {
     public interface IWordDal:IEntityRepository<Word>
     {
-        void Update(Word word, Word updatedWord);
     }
 }

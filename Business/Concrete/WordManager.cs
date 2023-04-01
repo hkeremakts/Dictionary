@@ -59,10 +59,22 @@ namespace Business.Concrete
         {
             return new SuccessDataResult<Word>(_wordDal.Get(w => w.Name == name));
         }
-
-        public IResult Update(Word word,Word updatedWord)
+        [ValidationAspect(typeof(WordValidator))]
+        public IResult Update(Word word)
         {
-            _wordDal.Update(word, updatedWord);
+            string[] definitions = GetDefinitionsArray(word);
+            var result = BusinessRules.Run(
+                CheckIfWordAlreadyExists(word.Name),
+                CheckIfDefinitionsAreNull(definitions)
+                );
+            if (result != null)
+                return new ErrorResult(result.Message);
+            for (int i = 0; i < definitions.Length; i++)
+            {
+                definitions[i] = WordReplacements(definitions[i]);
+                definitions[i] = SentenceOrganizations(definitions[i]);
+            }
+            _wordDal.Update(word);
             return new SuccessResult(Messages.WordUpdated);
         }
         private string WordReplacements(string str)

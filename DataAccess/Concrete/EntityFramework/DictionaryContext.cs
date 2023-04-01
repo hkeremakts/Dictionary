@@ -12,7 +12,7 @@ namespace DataAccess.Concrete.EntityFramework
     {
         public DictionaryContext():base("DictionaryDatabase")
         {
-
+            Database.SetInitializer<DictionaryContext>(new DropCreateDatabaseIfModelChanges<DictionaryContext>());
         }
         public DbSet<Word> Words { get; set; }
     }
