@@ -32,7 +32,7 @@ namespace Business.Concrete
             var result = BusinessRules.Run(
                 CheckIfWordAlreadyExists(word.Name),
                 CheckIfDefinitionsAreNull(definitions),
-                CheckIfNameIsNull(word.Name)
+                CheckIfNameIsntNull(word.Name)
                 );
             if (result != null)
                 return new ErrorResult(result.Message);
@@ -57,7 +57,13 @@ namespace Business.Concrete
 
         public IDataResult<Word> GetWordByName(string name)
         {
-            return new SuccessDataResult<Word>(_wordDal.Get(w => w.Name == name));
+            var result = BusinessRules.Run(
+                CheckIfNameIsntNull(name),
+                CheckIfWordExists(name));
+            if (result!=null)
+                return new ErrorDataResult<Word>(result.Message);
+            var word = _wordDal.Get(w => w.Name == name);
+            return new SuccessDataResult<Word>(word);
         }
         [ValidationAspect(typeof(WordValidator))]
         public IResult Update(Word word)
@@ -132,10 +138,17 @@ namespace Business.Concrete
             }
             return new ErrorResult(Messages.WordDontHaveAnyDefinition);
         }
-        private IResult CheckIfNameIsNull(string name)
+        private IResult CheckIfWordExists(string name)
         {
-            if (name.Length < 1)
-                return new ErrorResult(Messages.WordDontHaveAnyName);
+            var result = _wordDal.Get(w => w.Name == name);
+            if (result == null)
+                return new ErrorResult(Messages.WordDoesntExist);
+            return new SuccessResult();
+        }
+        private IResult CheckIfNameIsntNull(string name)
+        {
+            if (name.Length<1)
+                return new ErrorResult(Messages.NameIsNull);
             return new SuccessResult();
         }
     }

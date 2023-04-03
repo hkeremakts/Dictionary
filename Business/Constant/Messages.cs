@@ -14,5 +14,7 @@ namespace Business.Constant
         public static string WordAlreadyExists = "Bu Kelime Zaten Var.";
         public static string WordDontHaveAnyDefinition = "Kelimenin En Az Bir Açıklaması Olmalı.";
         public static string WordDontHaveAnyName = "Kelimenin Bir Adı Olmalı.";
+        public static string WordDoesntExist = "Kelime Mevcut Değil.";
+        public static string NameIsNull = "Lütfen Bir Kelime Adı Giriniz.";
     }
 }

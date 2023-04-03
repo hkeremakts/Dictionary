@@ -73,10 +73,9 @@ namespace DictionaryForm
                 MessageBox.Show(result.Message);
             else
             {
-                var deleteResult=_wordService.Delete(result.Data);
-                MessageBox.Show(deleteResult.Message)
+                var deleteResult = _wordService.Delete(result.Data);
+                MessageBox.Show(deleteResult.Message);
             }
-                
         }
     }
 }
