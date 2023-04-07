@@ -37,13 +37,19 @@ namespace DictionaryForm
         {
             string name = searchTextBox.Text;
             var result = _wordService.GetWordByName(name);
+            if (!result.Success)
+            {
+                MessageBox.Show(result.Message);
+                return;
+            }
+            _definitions.Clear();
             nameDalTextBox.Text = result.Data.Name;
             translationDalTextBox.Text = result.Data.Translation;
             var wordInfo = result.Data.GetType().GetProperties().Where(x => x.Name.Contains("Definition")).ToArray();
             for (int i = 0; i < wordInfo.Length; i++)
             {
                 var data = wordInfo[i].GetValue(result.Data);
-                if (data.ToString().Length==0)
+                if (data==null)
                     break;
                 _definitions.Add(data.ToString());
             }

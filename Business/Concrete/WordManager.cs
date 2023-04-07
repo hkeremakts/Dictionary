@@ -46,6 +46,9 @@ namespace Business.Concrete
         }
         public IResult Delete(Word word)
         {
+            var result = BusinessRules.Run(CheckIfWordExists(word.Name));
+            if (result != null)
+                return new ErrorResult(result.Message);
             _wordDal.Delete(word);
             return new SuccessResult(Messages.WordDeleted);
         }
@@ -69,10 +72,7 @@ namespace Business.Concrete
         public IResult Update(Word word)
         {
             string[] definitions = GetDefinitionsArray(word);
-            var result = BusinessRules.Run(
-                CheckIfWordAlreadyExists(word.Name),
-                CheckIfDefinitionsAreNull(definitions)
-                );
+            var result = BusinessRules.Run(CheckIfDefinitionsAreNull(definitions));
             if (result != null)
                 return new ErrorResult(result.Message);
             for (int i = 0; i < definitions.Length; i++)
@@ -80,7 +80,7 @@ namespace Business.Concrete
                 definitions[i] = WordReplacements(definitions[i]);
                 definitions[i] = SentenceOrganizations(definitions[i]);
             }
-            _wordDal.Update(word);
+            _wordDal.Update(CreateWord(word.Name,definitions,word.Translation));
             return new SuccessResult(Messages.WordUpdated);
         }
         private string WordReplacements(string str)

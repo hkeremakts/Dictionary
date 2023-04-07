@@ -16,10 +16,10 @@ namespace DictionaryForm
 {
     public partial class UpdateForm : Form
     {
-        int i = 1;
+        int shownDefinition = 0;
         IWordService _wordService;
         Word _word;
-        public RichTextBox[] _definitionTextBoxArray = new RichTextBox[5];
+        List<RichTextBox> _definitionTextBoxList = new List<RichTextBox>();
         public UpdateForm(Word word)
         {
             _wordService = InstanceFactory.GetInstance<IWordService>();
@@ -27,17 +27,20 @@ namespace DictionaryForm
             _word = word;
             nameTextBox.Text=word.Name;
             translationTextBox.Text = word.Translation;
-            _definitionTextBoxArray[0] = definitionTextBox1;
-            _definitionTextBoxArray[1] = definitionTextBox2;
-            _definitionTextBoxArray[2] = definitionTextBox3;
-            _definitionTextBoxArray[3] = definitionTextBox4;
-            _definitionTextBoxArray[4] = definitionTextBox5;
+            _definitionTextBoxList.Add(definitionTextBox1);
+            _definitionTextBoxList.Add(definitionTextBox2);
+            _definitionTextBoxList.Add(definitionTextBox3);
+            _definitionTextBoxList.Add(definitionTextBox4);
+            _definitionTextBoxList.Add(definitionTextBox5);
+            for (int i = 1; i < _definitionTextBoxList.Count; i++)
+                _definitionTextBoxList[i].Hide();
+            definitionsScroller.Maximum = _definitionTextBoxList.Count;
             var wordInfo = word.GetType().GetProperties().Where(x => x.Name.Contains("Definition")).ToArray();
             for (int i = 0; i < wordInfo.Length; i++)
             {
                 if (wordInfo[i].GetValue(word) == null)
                     break;
-                _definitionTextBoxArray[i].Text = wordInfo[i].GetValue(word).ToString();
+                _definitionTextBoxList[i].Text = wordInfo[i].GetValue(word).ToString();
             }
         }
 
@@ -52,7 +55,7 @@ namespace DictionaryForm
             var wordInfo= updatedWord.GetType().GetProperties().Where(x => x.Name.Contains("Definition")).ToArray();
             for (int i = 0; i < wordInfo.Length; i++)
             {
-                wordInfo[i].SetValue(updatedWord, _definitionTextBoxArray[i].Text);
+                wordInfo[i].SetValue(updatedWord, _definitionTextBoxList[i].Text);
             }
             var result = _wordService.Update(updatedWord);
             if (!result.Success)
@@ -63,22 +66,25 @@ namespace DictionaryForm
 
         private void definitionsScroller_ValueChanged(object sender, EventArgs e)
         {
-            if (definitionsScroller.Value < 1)
-                definitionsScroller.Value = 1;
-            else if (definitionsScroller.Value > _definitionTextBoxArray.Length)
-                definitionsScroller.Value = _definitionTextBoxArray.Length;
-            for (int j = 1; j < _definitionTextBoxArray.Length+1; j++)
-            {
-                if (definitionsScroller.Value == j)
-                {
-                    _definitionTextBoxArray[j - 1].Show();
-                    if (i == j - 1)
-                        _definitionTextBoxArray[j - 2].Hide();
-                    else if (i == j + 1)
-                        _definitionTextBoxArray[j].Hide();
-                    i = j;
-                }
-            }
+            //if (definitionsScroller.Value < 1)
+            //    definitionsScroller.Value = 1;
+            //else if (definitionsScroller.Value > _definitionTextBoxList.Count)
+            //    definitionsScroller.Value = _definitionTextBoxList.Count;
+            //for (int j = 1; j < _definitionTextBoxList.Count+1; j++)
+            //{
+            //    if (definitionsScroller.Value == j)
+            //    {
+            //        _definitionTextBoxList[j - 1].Show();
+            //        if (i == j - 1)
+            //            _definitionTextBoxList[j - 2].Hide();
+            //        else if (i == j + 1)
+            //            _definitionTextBoxList[j].Hide();
+            //        i = j;
+            //    }
+            //}
+            _definitionTextBoxList[shownDefinition].Hide();
+            _definitionTextBoxList[(int)definitionsScroller.Value - 1].Show();
+            shownDefinition=(int)definitionsScroller.Value-1;
         }
     }
 }
