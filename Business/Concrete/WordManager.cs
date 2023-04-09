@@ -80,7 +80,7 @@ namespace Business.Concrete
                 definitions[i] = WordReplacements(definitions[i]);
                 definitions[i] = SentenceOrganizations(definitions[i]);
             }
-            _wordDal.Update(CreateWord(word.Name,definitions,word.Translation));
+            _wordDal.Update(CreateWord(word.Name,definitions,word.Translation,word.Id));
             return new SuccessResult(Messages.WordUpdated);
         }
         private string WordReplacements(string str)
@@ -96,7 +96,7 @@ namespace Business.Concrete
                 str = str.Insert(str.Length, ".");
             return str;
         }
-        private Word CreateWord(string name, string[] definitions, string translation)
+        private Word CreateWord(string name, string[] definitions, string translation, int id = 0)
         {
             int j = 0;
             Word word = new Word()
@@ -104,6 +104,8 @@ namespace Business.Concrete
                 Name = name,
                 Translation = translation
             };
+            if(id!=0)
+                word.Id = id;
             var result = word.GetType().GetProperties().Where(x => x.Name.Contains("Definition")).ToArray();
             for (int i = 0; i < definitions.Length; i++)
             {
